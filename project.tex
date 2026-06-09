@@ -1,0 +1,254 @@
+\documentclass[10pt,journal,a4paper]{IEEEtran}
+\usepackage{amsmath, amsfonts}
+\usepackage{hyperref}
+
+
+\usepackage{amsthm}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}   % upright text
+\newtheorem*{note}{Note}
+\begin{document}
+%
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+\title{NOOC Project: Studying the increase of the chromatic number of a random graph}
+%
+% 
+\author{Mathis Hage --- 356449}
+
+\IEEEcompsoctitleabstractindextext{
+\begin{abstract}
+The chromatic number of a random graph is much more robust than previously thought. That is at least what Alon and Sudakov demonstrated in their 2010 paper, \textit{Increasing the chromatic number of a random graph}. After summarizing their objectives and proof techniques, we will see in what way the results they obtain are interesting, and discuss various points regarding both the substance and the form of the paper.
+\end{abstract}
+}
+
+% make the title area
+\maketitle
+\IEEEdisplaynotcompsoctitleabstractindextext
+
+\section{Introduction}
+
+The study of random graphs started around the 1960's with the introduction of the $G_{n, p}$ model by Paul Erdős and Alfréd Rényi. At first sight, a $G_{n,p}$ graph has a strikingly simple construction : take $n$ labeled vertices and consider every pair one by one. With probability $p$, add an edge between them, and move on to the following pair. Not to be fooled however : such graphs immediately received attention for their surprising properties. Erdős and Rényi for example proved that the transition for a $G_{n, p}$ graph from possessing or not some property $\mathcal{P}$ can be sharp, just like a phase transition in physics :
+$$
+\mathbb{P}(G_{n, p}\text{ has property } \mathcal{P}) \to \begin{cases}
+	0, & p < p^*\\
+	1, & p > p^*.
+\end{cases} 
+$$ 
+One of their most famous result on this topic is the emergence of a giant component in $G_{n, p}$ : while for $p < 1 / n$ every component has size $\mathcal{O}(\log n)$, reaching this threshold marks the sudden appearance of a giant component whose size dominates.
+
+On the way to identify properties of these graphs, some hard problems that lasted sometimes for decades began to emerge. One of them, which we will be discussing in this report, is the chromatic number problem. Coming from classical graph theory (as for a lot of big questions in random graph theory), this problem asks what is the minimal number of colors $\chi(G)$ that can be used to color the vertices of a graph $G$, such that no two adjacent vertices share the same color. The question which remained open for several years was to identify the asymptotic behavior of $\chi := \chi(G_{n, p})$ : Bollob\'as \cite{bollobas} later found the result $\chi(G_{n, p}) \sim \frac{n}{2 \log_b(np)}$ for dense graphs, where $b = 1 / (1-p)$. \L{}uczak \cite{luczak} later extended this result by proving that it also holds for all values of $p \ge c / n$.
+
+After this question was settled however, a lot of other problems still remained unanswered. The paper that we aim at reviewing in this analyis, \textit{Increasing the chromatic number of a random graph} by Noga Alon and Benny Sudakov \cite{main_paper}, tackles one of them. Their main concern is the study of $\chi(G_{n, p})$'s "robustness" against edges addition, or more formally its \textit{resilience} as we will see later. The results they obtain is that $\chi(G_{n, p})$ is much more resistant than previously thought.
+
+We will start by summarizing the work of Alon and Sudakov, the main theorems and their proofs, before giving a detailed analysis of the paper.
+
+\section{A Summary}
+
+\subsection{Goals and Framework}
+
+The paper starts with the following question, which gives a good overview of the work ahead: "What is the minimum number of edges that have to be added to $G_{n, 0.5}$ in order to increase its chromatic number $\chi = \chi(G_{n, p})$ by one percent ?". In fact, informally, the main objective is to find how much can $\chi$ actually change when adding a certain number of edges to the graph. From the definition of the chromatic number, it is clear that adding edges to a graph can only worsen it (or keep it unchanged), as connecting vertices together may force a new color to be used. We want to quantify this change. This remains vague however and we need a mathematical formulation of the problem.
+
+Formally, the author place themselves in the framework of \textit{resilience}. This framework, introduced by Sudakov and Vu \cite{resilience}, is defined as follows :
+
+\begin{definition}{}{}
+	Let $\mathcal{P}$ be a monotone increasing (decreasing) graph property, i.e. preserved under edge addition (deletion). Then :
+	\begin{itemize}
+		\item The \text{global resilience} of a graph $G$ with respect to $\mathcal{P}$ is the minimum number $r$ such that by deleting (adding) $r$ edges from $G$, one can obtain a graph not having $\mathcal{P}$.
+
+		\item the \text{local resilience} of a graph $G$ with respect to $\mathcal{P}$ is the minimum number $r$ such that by deleting (adding) at most $r$ edges at each vertex of $G$, one can obtain a graph not having $\mathcal{P}$.
+	\end{itemize}
+	
+\end{definition}
+
+Clearly, the intuitive idea of having a graph possessing $\mathcal{P}$ "robustly" is exactly transcribed as the graph having large resilience with respect to $\mathcal{P}$. 
+
+What remains to be done is to formulate the property encoding the change in chromatic number that we want to quantify under edge addition. Precisely, the rest of the paper is dedicated to investigate the resilience of $G_{n, p}$ with respect to this property, which is :
+$$
+\mathcal{P}_\varepsilon := "G_{n, p} \text{ has chromatic number at most } (1+\varepsilon) \frac{n}{2 \log_b (np)}",
+$$ 
+
+for all $\varepsilon > 0$. Recalling the result $\chi \sim \frac{n}{2 \log_b (np)}$ for $p \ge c / n$, it becomes clear that the value $(1+\varepsilon) \frac{n}{2 \log_b (np)}$ represents the increase of the chromatic number by a factor at most $(1+\varepsilon)$ (for example, for the $1\%$ increase advertised earlier, one would need to study the resilience w.r.t. $\mathcal{P}_{0.01}$).
+
+The main contribution of Alon and Sudakov is therefore the caracterisation of the global and local resiliences of $G_{n, p}$ w.r.t. $\mathcal{P}_\varepsilon$. Their results are exposed in the following subsection.
+
+
+\subsection{Main Results}
+
+The discoveries made by Alon and Sudakov mainly take place through two theorems. Below are reformulated versions (for the sake of clarity) of both of them : 
+
+\begin{theorem}[Lower bound on the global resilience]
+Let $\varepsilon > 0$ fixed, and let $n^{-1 / 3 + \delta} \leq p \leq 1 / 2$ for some $\delta > 0$. Then the global resilience of $G_{n, p}$ with respect to $\mathcal{P}_\varepsilon$ is a.a.s. lower bounded by $2^{-12} \varepsilon^2 \frac{n^2}{\log_b^2 (np)}$.
+\label{thm:glob_res}
+\end{theorem}
+Moreover, an explicit construction finds an upper bound of the same order, making the bound tight (up to a constant factor). Indeed for example for $\varepsilon = 1$, by taking $n / \log_b (np)$ vertices from $G_{n, p}$ and adding edges between all of them (creating a clique), this increases the chromatic number by a factor of two (as it goes from $\frac{n}{2 \log_b (np)}$ to $\frac{n}{\log_b (np)}$) which breaks $\mathcal{P}_1$, while only adding $\sim \frac{1}{4} n^2 / \log_b^2 (np) = \mathcal{O}(n^2 / \log_b^2 (np))$ edges. Therefore the global resilience with respect to $\mathcal{P}_\varepsilon$ is $\Theta( n^2 / \log_b^2 (np))$. This means that a.a.s., one has to add at least $\Omega( n^2 / \log_b^2 (np))$ edges to increase the chromatic number by some fixed factor $ 1 + \varepsilon$.
+
+\begin{theorem}[Lower bound on the local resilience]
+	Let $\varepsilon > 0$ fixed, and  $n^{-1 /3 + \delta} \leq p \leq 1 / 2$ for some $\delta > 0$. Then, the local resilience of $G_{n, p}$ with respect to $\mathcal{P}_\varepsilon$ is a.a.s. lower bounded by $2^{-8} \varepsilon \frac{n}{ \log_b(np) \log\log n} $
+\label{thm:loc_res}
+\end{theorem}
+\begin{note}
+	In the paper, the theorem is stated in terms of the maximum degree of the graph added to $G_{n, p}$ being upper bounded by $2^{-8}\varepsilon \frac{n}{\log_b(np) \log \log n}$. As is, the theorem was quite hard to link to the original problem, and the maximum degree bound was more of a proof artifact. Our version is a direct corollary which looses no important information whatsoever.
+\end{note}
+Similarly as for the preceeding theorem, an upper bound can be obtained by the clique construction, making the bound tight up to the $\log \log n$ factor. This is a point that will be discussed further later on. In other words, the authors also bounded the minimum number of edges to be added to each vertex of $G_{n, p}$ in order to increase the chromatic number by a factor of $1 + \varepsilon$. 
+
+\subsection{Proof strategy}
+
+In their second section, the authors develop tools with the sole objective of proving their "lemma 2.4" (for us lemma \ref{lma:two_four}) which will be recurrent in the proofs of theorems \ref{thm:glob_res} and \ref{thm:loc_res}.
+
+\subsubsection{Towards "Lemma 2.4"}
+
+This part summarizes section 2 of the paper as a whole. To say it informally, the authors prove that in $G_{n, p}$, independent sets of near-maximal size (i.e. of size close to $\alpha(G_{n,p})$ the size of the largest independent set in $G_{n, p}$) are spread uniformly enough to be unable to inject edges in $G_{n,p}$ that avoid them all.
+
+First of all, we restrict ourselves --- as for the theorems --- to the case $n^{-1 /3 + \delta} \leq p \leq 1 /2 $ for some $\delta > 0$. Then, we define a few quantities :
+\begin{itemize}
+	\item Set $k_0$ to be the greatest possible $k$ such that the average number of independent sets of size $k$ in $G_{n, p}$ is greater than or equal to $n^4$. In other words, $k_0$ is the largest possible size of the independent sets if we want them to be "abundant" in $G_{n, p}$. We defined $k_0$ in order to have a deterministic quantity close to $\alpha(G_{n, p})$ ;
+	\item  Set $\mu := \mathbb{E}\left[ \# \text{ of independent sets of size } k_0 \right]$. Then by a simple combinatorial argument, $\mu = \binom{n}{k_0} (1-p)^{\binom{k_0}{2}} $, greater than or equal to $n^{4}$ by definition.
+\item Define $Z_{u, v}$ the random variable counting the number of independent sets of size $k_0$ in $G_{n, p}$ containing both $u$ and  $v$, and set $\mu_0 := \mathbb{E}\left[ Z_{u, v} \right]$ ;
+\item Finally, the key element, recurrent in the following proofs, is $\mathcal{I}$, the largest collection of independent sets of size $k_0$ in $G_{n, p}$ such that \textit{no two vertices $u, v$ belong to more than $4 \mu_0$ sets in $\mathcal{I}$}. Define also $X = \lvert \mathcal{I} \rvert $.
+\end{itemize}
+
+Moving on, one needs the following lemma, showing the concentration of $X$ around $\mu$ w.h.p. :
+
+\begin{lemma}
+	$$
+	\mathbb{P}(X \leq \frac{3\mu}{5}) \leq e^{- \frac{\mu^2}{300 \mu_0^2 p}}.
+	$$ 
+	\label{lma:X_concentration}
+\end{lemma}
+
+The proof relies on the Alon-Kim-Spencer concentration inequality \cite{alon_concentration}, and requires the following two facts about $X$ to work :
+\begin{enumerate}
+	\item $\mathbb{E}\left[ X \right] \sim \mu$. In fact, take $\mathcal{F}$ the collection of independent sets of size $k_0$ (note that $\mathbb{E}\left[ \lvert \mathcal{F} \rvert  \right] = \mu$), and considering every pair of vertices $u,v $ one by one, remove relevant sets in $\mathcal{F}$ in order to ensure that the pair appears in no more than $4\mu_0$ sets in $\mathcal{F}$. The average number of deleted sets had already been studied \cite{X_mean} and computed to be $o(\mu)$. In the end :
+		$$
+		\mathbb{E}\left[ X \right] \ge \mathbb{E}\left[ \lvert \mathcal{F} \rvert  \right] - \mathbb{E}\left[ \# \text{deleted sets} \right] = (1 - o(1))\mu.
+		$$
+		As obviously $\mathbb{E}\left[ X \right] \leq \mathbb{E}\left[ \lvert \mathcal{F} \rvert  \right] = \mu$, this completes the proof.
+	\item $X$ is a $4\mu_0$-Lipschitz function, meaning that adding or removing an edge between two vertices in $G_{n, p}$ changes $X$ by at most $4\mu_0$. This is proven very directly : the worst that can happen when adding (removing) an edge between $u, v$ is that $\mathcal{I}$ remains the same up to the deletion (addition) of at most $4\mu_0$ independent sets containing $u, v$.
+
+\end{enumerate}
+
+$X$ satisfies the conditions for the Alon-Kim-Spencer inequality to be applicable, giving back exactly lemma \ref{lma:X_concentration} when expanded.
+
+Finally, the following lemma, central piece of this section, can be stated :
+\begin{lemma}
+With $p$ being in the bounds described earlier, then with probability at least $ 1 - e^{-n^{1+\delta}}$, $G_{n, p}$ has the following property : "for every collection $E$ of $m$ edges, there is an independent set $I$ of size $k_0$ such that $I$ contains at most $\textsc{MAX\_E\_EDGES}(n, m) := 7 k_0^2 \frac{m}{n^2 }$ edges of $E$.".
+	 \label{lma:two_four}
+\end{lemma}
+
+The proof of this lemma exploits the tools developped earlier. Recall $\mathcal{I}$, the largest collection of independent sets such that no pair of vertices appear in more than $4\mu_0$ of these sets. First of all, lemma \ref{lma:X_concentration} along with standard bounds allow to show that $X$, i.e., the size of $\mathcal{I}$, is at least $3 \mu / 5$ with probability $1 - e^{-n^{1 + \delta}}$. Then, for such sets $\mathcal{I}$, a simple counting argument between $\mathcal{I}$ and $E$ guarantees the existence of an independent set $I \in \mathcal{I}$ with few edges of $E$  (i.e., less than $\textsc{MAX\_E\_EDGES}(n, m)$).
+
+Informally and as advertised at the beginning, this lemma leads to having a.a.s. that whatever $m$ edges we add to $G_{n, p}$, we can always find an independent set of size $k_0$ containing at most  $\textsc{MAX\_E\_EDGES}(n, m) = 7k_0^2  m / n^2 $ edges. In the rest of this summary, saying that we have "few edges from $E$ " will mean less than \textsc{MAX\_E\_EDGES}.
+\subsubsection{Proving the main results}
+
+The authors start by introducing a few tools that we state briefly :
+\begin{lemma}[Tur\'an \cite{proba_method}]
+$$
+\alpha(G) \ge \frac{V(G)^2 }{2 e(G) + V(G)}.
+\label{lma:turan}
+$$ 	
+\end{lemma}
+And :
+\begin{lemma}
+	Let $n^{-1 /3} \leq p \leq 1 / 2$, and $\varepsilon > 0$. Then a.a.s., every subset of $G_{n, p}$ of size $s \leq \textsc{MAX\_SUBSET\_SIZE} := \frac{\varepsilon n}{16 \log (np)}$ contains at most $\frac{\varepsilon np}{8 \log (np)} s$ edges.
+	\label{lma:max_edges}
+\end{lemma}
+Proof of this last lemma is done very directly by showing that the number of subsets violating this assertion goes to zero as $n \to \infty$.
+
+One can then proceed to the proof of Theorem \ref{thm:glob_res}. Imagine an adversary adds the $m$ edges of $E$ into $G_{n, p}$, and let $G = G_{n,p} \cup E$. To characterise $\chi(G)$, the idea is to exhibit an explicit coloring of $G$. Define $k := 2\log_b(np/\log^3 n) = (1+o(1)) 2\log_b(np)$.
+
+The coloring proceeds greedily on a shrinking subset $S \subseteq V(G)$, initialized to $V(G_{n,p})$. At each step, the union bound applied to lemma \ref{lma:two_four} over all possible subsets guarantees that, as long as $|S| > \textsc{MAX\_SUBSET\_SIZE}$, one can find an independent set $I$ of $G_{n,p}$ of size at least $k$ inside $S$, containing few edges of $E$. Since $I$ may contain edges of $E$, it is not necessarily independent in $G$. Turán's lemma \ref{lma:turan} is therefore applied to $G[I]$ to extract a truly independent set of $G$ of size at least 
+$$
+\textsc{WORST\_EDGES\_REMOVAL}(|S|) := \frac{k^2}{16k^2m/|S|^2 + k},
+$$
+which is then colored with a new color and removed from $S$. This procedure repeats until $|S| \leq \textsc{MAX\_SUBSET\_SIZE}$.
+
+Then, the authors study how many colors are needed to color $G_{n, p} \cup E$ in two steps, which correspond to $|S| =: s$ being respectively greater and smaller than $\textsc{MAX\_SUBSET\_SIZE}$. This value acts as a "threshold" between regimes : above it, subgraphs are large enough for lemma \ref{lma:two_four} to be applicable, while under, lemma \ref{lma:max_edges} works.
+
+First, consider the case where $s$ is larger than this threshold. The analysis of the number of colors needed is done by considering individually the \textit{phases} $s \in ]2^{-i}n, 2^{-i + 1}n ]$. At phase $i$, the worst that can happen is that we only color $\textsc{WORST\_EDGES\_REMOVAL}(s) \ge \textsc{WORST\_EDGES\_REMOVAL}(2^{-i + 1}n)$ vertices at each step. A simple worst-case bound show that the number of colors used at phase $i$ is therefore at most $2^{i + 4}\frac{m}{n} + 2^{-i} \frac{n}{k}$. Summing up the number of colors needed for all phases, their number is upper bounded by :
+$$
+(1+ \frac{\varepsilon}{4}) \frac{n}{k}.
+$$ 
+for this case.
+
+Secondly, moving on to $s$ being smaller than $\textsc{MAX\_SUBSET\_SIZE}$, lemma \ref{lma:max_edges} controls the edge density of remaining subgraph. Together with the maximum possible number of edges in $E$, one shows that the remaining subgraph can be colored by at most $\frac{\varepsilon n}{3 \log_b (np)}$  colors.
+
+Adding up the upper bounds, one proves the theorem. 
+
+Theorem \ref{thm:loc_res}'s proof has exactly the same structure, up to shifting the main tool from the \textit{number of edges} $m$ of $E$ to the \textit{maximum degree} of the added graph. Therefore, the proof will not be detailed here.
+
+\section{A Critique}
+
+\subsection{Methodology}
+This paper seems to be a good overview of typical graph theory research. As always, the constants and factors that at first seem to appear from nowhere are actually carefully engineered to satisfy precise asymptotical bounds. The cleverness of the proofs is notable. The idea of showing that the independent sets of large enough size are distributed uniformly enough for them to still exist when adding some edges is initially very intuitive, but one can only praise the way in which Alon and Sudakov managed to elegantly formalize this mathematically.
+
+Moreover, the use of the resilience framework allows to elegantly quantify the concrete question asked in the abstract. The only regret we dare to formulate is that the raw statement of the two main theorems is not made in terms of this framework (in opposition with what we ourselves did in our summary), which is a shame considering the work done to introduce it. Of course, a more concrete explanation of the theorem is also welcome, but could have been done in a less central spot than the statement of the theorems themselves, in our humble opinion.
+
+\subsection{Improvements from existing results}
+
+In their introduction, the authors cite a previous result by Sudakov and Vu \cite{resilience} :
+
+\begin{theorem}
+	Let $n^{-1 / 3 + \delta} \leq p \leq 3 / 4$ for some $\delta > 0$. Then the local resilience of $G_{n, p}$ with respect to being $(1 + o(1)) \frac{n}{2 \log_b (np)}$-colorable is at least $n p^2 / \log^5 n $.
+	\label{thm:old_bound}
+\end{theorem}
+
+The authors then state that the result they present "substantially improve" this result. However, we argue here that there is a subtle difference between the "old version" \ref{thm:old_bound} and the "new version" \ref{thm:loc_res} of the theorem. In fact in the old version, the resilience of $G_{n, p}$ is tested a.a.s. with respect to the property :
+$$
+\mathcal{P}_\text{old} = "G_{n, p} \text{ has chromatic number at most } \frac{n}{2 \log_b (np)}"
+$$
+The old version therefore answers the question "At what point does the chromatic number deviate from its original value ?", whereas the new version answers the question "At what point does $\chi$ deviate from its original value by a factor of  $1 + \varepsilon$ ?", for a fixed value of $\varepsilon$.
+
+The resilience with respect to $\mathcal{P}_\text{old}$ corresponds to the resilience w.r.t $\mathcal{P}_\varepsilon$ with a vanishing $\varepsilon$, and since the latter was studied for all $\varepsilon > 0$, this makes the difference extremely subtle. However, as in the proof of the new version, the number of added edges depends on $\varepsilon$ and $n$, taking the limit is non-trivial, and we hence still argue that some work is needed to prove that this new theorem implies the old version. The new theorem \ref{thm:loc_res} gives a significantly better bound than the old one \ref{thm:old_bound}, but by relaxing the initial problem slightly.
+
+This doesn't change the fact that the problem defined in this paper was treated perfectly, and we look into the implications of the results in the next section.
+
+\subsection{Implications of the results}
+
+The results achieved introduce new excellent bounds for both global and local resilience of $G_{n, p}$ w.r.t. $\mathcal{P}_\varepsilon$. Particularly, the tightness of these bounds is remarkable : more than simply reducing the search space for the resiliences, the authors actually solve their problem by finding an asymptotical equivalent of the answer, up to some constants.
+
+The order of the global and local resiliences being respectively sub-quadratic and sub-linear, this shows that for reasonable values of $p$, the chromatic number of the $G_{n, p}$ model requires a significant amount of supplementary edges added to the graph for it to increase by a factor of $1 + \varepsilon$. In fact, the number of edges to be added for such an increase is almost of the order of the number of pairs of vertices for the global resilience, and almost of the order of the number of vertices for the local resilience : this is consequent.
+
+\subsection{Not-so-simple facts}
+
+A point that is rather subjective but that we wish to discuss relates to the various times the authors talk about a "simple" or "trivial" property. Of course, some of them are obvious for a reader having a minimal set of skills in graph theory and combinatorics, but some of them are not. Consider the claim made at the beginning of section two of the paper : "One can show easily that $k_0$ satisfies $k_0 \sim 2 \log_b(np)$". From our side, it seems that proving this fact uses various approximations and requires quite a few rather non-trivial steps. We dare to recommend the authors to at least say a few words on the proof of such "simple facts".
+
+\subsection{Limitations and further discussions}
+
+There are several important points we wish to cover. The first one is the bounds imposed on the value of $p$. In fact, rather than being inherent to the resilience properties, these bounds are simply proof-specific artifacts. The choice of making use of their concentration bound (lemma \ref{lma:X_concentration}) forces the value of p to strictly dominate $n^{-1 / 3 + \delta}$ for some $\delta > 0$. \L{}uczak established the asymptotical behavior of $\chi(G_{n, p})$ up to $p \ge c / n$, and the question of the resilience between $c / n$ and $n^{-1 / 3 + \delta}$ remains unanswered. To our knowledge, it is still an open problem to this day. On the other hand, requiring $p \leq 1 / 2$ comes from the choice of the authors to "not optimize constants" as they said themselves : the base $b$ of the logarithm hence remains stable. Therefore, we conjecture that this condition can be relaxed without altering the results. Here also, no answer have been given on this matter to this day, to our knowledge.
+
+Then, the question of the $\log \log n$ factor in the local resilience bound can be discussed. The clique construction shows the upper bound doesn't contain this factor, but in the end the resilience could be anywhere between $\frac{n}{\log_b (np) \log \log n}$ and $n / \log_b (np)$ Here, the proof technique \textit{in phases}, with batches of size $2^{-i}n$ used to demonstrate theorem \ref{thm:loc_res} is the principal culprit. The authors conjecture that this factor can be relaxed, but to this day, no answer that we are aware of has been brought. One would maybe need to come up with a completely different proof technique to show such a statement.
+
+In addition to the ones mentioned before, the paper also evokes a few questions remaining open. Namely, their conjecture that the most economical way of increasing the chromatic number of $G_{n, p}$ by a factor $(1+\varepsilon)$ is with a clique, or the study of the increase of this chromatic number by a lower order term, remain, to our knowledge, unanswered.
+
+\section{Conclusion}
+
+In conclusion, through their elegant proofs and methods, Alon and Sudakov managed to demonstrate the robustness of the chromatic number $\chi(G_{n, p})$ when attempting to increase it by a fixed factor. Even though the choice was made to not focus on constants, the precision of their bounds in such a difficult topic is remarkable. The questions raised by their paper still seeming unanswered after sixteen years, one can wonder if it is because the subject is too hard, if it does not spark too much interest, or if the writer of this present paper did not look into online research papers in enough depth. The chromatic number being a very sought-after subject of study, one tends more towards the first or the last options.
+
+\begin{thebibliography}{1}
+
+\bibitem{main_paper}
+N. Alon and B. Sudakov, \textit{Increasing the chromatic number of a random graph}, 2010.
+\bibitem{bollobas}
+B. Bollob\'as, \textit{The chromatic number of random graphs}, Combinatorica 8 (1988), 49–55.
+
+\bibitem{luczak}
+T. \L{}uczak, \textit{The chromatic number of random graphs}, Combinatorica 11 (1991), 45–54.
+
+\bibitem{resilience}
+B. Sudakov and V. Vu, Local resilience of graphs, Random Structures and Algorithms 33 (2008), 409–433.
+
+\bibitem{X_mean}
+M. Krivelevich, B. Sudakov, V. Vu and N. Wormald, On the probability of independent sets in random graphs, \textit{Random Structures and Algorithms} 22 (2003), 1–14.
+
+\bibitem{alon_concentration}
+N. Alon, J. H. Kim and J. Spencer,\textit{Nearly perfect matchings in regular simple hypergraphs}, Israel J. Math. 100 (1997), 171-187.
+
+\bibitem{proba_method}
+N. Alon and J. Spencer, \textit{The probabilistic method}, 3rd ed., Wiley, New York, 2008.
+\end{thebibliography}
+\end{document}
