@@ -4,6 +4,6 @@ The aim of this project was to dive into a research paper about random graph the
 - Give a relevant critique of the paper ;
 - Produce an oral presentation about the two points above.
 
-## Outcome
+## Outcome
 The work produced was judged satisfactory by the teaching team of the course. The oral presentation turned out technical enough to not be boring for experts in the field, while focusing on a high level overview of the paper. The missing details were exposed in the report.
 The teaching team awarded my work a perfect grade.
